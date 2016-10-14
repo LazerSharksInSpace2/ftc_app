@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * This file contains a configration for Mr. Reynolds' TestBed motors/servos/sensor
+ * This file contains a configuration for Mr. Reynolds' TestBed motors/servos/sensor
  *
  * It is intended to test basic function of program parameters
  *
