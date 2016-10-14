@@ -39,12 +39,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * Testing Stetson's sweeper button toggle program from Dan
+ * An example toggle button by Stetson's sweeper button toggle program from Dan
+ * Button 'a' will turn sweeper motor on. Consecutive presses will alternate direction of motor
+ * Motor stays running until button 'x' is pressed.
  */
 
 @TeleOp(name="buttonToggle", group="Linear Opmode")  // @Autonomous(...) is the other common choice
 //@Disabled
-public class StetsonTeleOp extends LinearOpMode {
+public class StetsonToggleButton extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -97,7 +99,7 @@ public class StetsonTeleOp extends LinearOpMode {
             motorRight.setPower(gamepad1.right_stick_y);
 
 
-//Check if button a is currently pressed
+//Toggle Button
             if(gamepad1.a) //button 'a' is pressed
             {
                 // Only do the following if this is the first time the button is pressed
@@ -118,7 +120,7 @@ public class StetsonTeleOp extends LinearOpMode {
                 buttonPressed = false;
             }
 
-            if (gamepad1.x) //button 'x' will stop sweeper
+            if (gamepad1.x) //button 'x' will stop sweeper and reset the motor direction to initial state
             {
                 sweeper.setPower(0.0);
                 motorDirection = -1.0;
