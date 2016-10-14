@@ -44,7 +44,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="buttonToggle", group="Linear Opmode")  // @Autonomous(...) is the other common choice
 //@Disabled
-public class StetsonTeleOp extends LinearOpMode {
+public class StetsonToggleButton extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
