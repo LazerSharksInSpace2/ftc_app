@@ -111,15 +111,14 @@ public class ToggleButton extends LinearOpMode {
 
                 // update previous state variable.
                 aPrevState = aCurrState;
-
-                if (gamepad1.x) //button 'x' will stop sweeper
-                {
-                    sweeper.setPower(0.0);
-                    motorDirection = -1.0;
-                }
-
-                idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
             }
+            if (gamepad1.x) //button 'x' will stop sweeper
+            {
+                sweeper.setPower(0.0);
+                motorDirection = -1.0;
+            }
+
+            idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
 
     }
