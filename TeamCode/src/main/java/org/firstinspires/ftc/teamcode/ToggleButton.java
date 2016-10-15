@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Testing Stetson's sweeper button toggle program from Dan
  */
 
-@TeleOp(name="buttonToggle", group="Linear Opmode")  // @Autonomous(...) is the other common choice
+@TeleOp(name="Toggle2", group="Linear Opmode")  // @Autonomous(...) is the other common choice
 //@Disabled
 public class ToggleButton extends LinearOpMode {
 
@@ -106,12 +106,13 @@ public class ToggleButton extends LinearOpMode {
             if ((aCurrState == true) && (aCurrState != aPrevState)) {
                 // button is transitioning to a pressed state. So Toggle motorDirection
                 motorDirection = motorDirection * -1.0;
+
                 //Set the sweeper power to whatever the motorDirection value is
                 sweeper.setPower(motorDirection);
-
-                // update previous state variable.
-                aPrevState = aCurrState;
             }
+            // update previous state variable.
+            aPrevState = aCurrState;
+
             if (gamepad1.x) //button 'x' will stop sweeper
             {
                 sweeper.setPower(0.0);
