@@ -31,23 +31,18 @@ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode.ExampleCode;
-
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * An example toggle button by Stetson's sweeper button toggle program from Dan
- * Button 'a' will turn sweeper motor on. Consecutive presses will alternate direction of motor
- * Motor stays running until button 'x' is pressed.
+ * Testing Stetson's sweeper button toggle program from Dan
  */
 
-@TeleOp(name="buttonToggle", group="Linear Opmode")  // @Autonomous(...) is the other common choice
+@TeleOp(name="Toggle2", group="Linear Opmode")  // @Autonomous(...) is the other common choice
 //@Disabled
-public class StetsonToggleButton extends LinearOpMode {
+public class ToggleButton2 extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -67,20 +62,22 @@ public class StetsonToggleButton extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-         motorLeft  = hardwareMap.dcMotor.get("motorL");
-         motorRight = hardwareMap.dcMotor.get("motorR");
-         sweeper = hardwareMap.dcMotor.get("sweeper");
+        motorLeft = hardwareMap.dcMotor.get("motorL");
+        motorRight = hardwareMap.dcMotor.get("motorR");
+        sweeper = hardwareMap.dcMotor.get("sweeper");
 
 
         // eg: Set the drive motor directions:
         // "Reverse" the motor that runs backwards when connected directly to the battery
-         motorLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-         motorRight.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-         sweeper.setDirection(DcMotor.Direction.FORWARD); // Can change based on motor configuration
+        motorLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        motorRight.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        sweeper.setDirection(DcMotor.Direction.FORWARD); // Can change based on motor configuration
 
         // Declare some variables
-        double  motorDirection = -1.0;   //Keeps track of the direction for the sweeper motor
-        boolean buttonPressed  = false;  //Keeps track of whether the button was previously pressed or not so we know when it is released
+        double motorDirection = -1.0;   //Keeps track of the direction for the sweeper motor
+        boolean aPrevState = false;      //Keeps track of whether the button was previously pressed or not so we know when it is released
+        boolean aCurrState = false;
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -100,35 +97,29 @@ public class StetsonToggleButton extends LinearOpMode {
             motorRight.setPower(gamepad1.right_stick_y);
 
 
-//Toggle Button
-            if(gamepad1.a) //button 'a' is pressed
-            {
-                // Only do the following if this is the first time the button is pressed
-                // since the last time it was released
-                if (!buttonPressed)
-                {
-                    //Multiplying the motorDirection by -1 will invert the value and reverse the motor direction
-                    motorDirection = motorDirection * -1.0;
+//Toggle motor direction when button 'a' pressed
 
-                    //Set button pressed to true so that we don't invert it again until the button is released and pressed again
-                    buttonPressed = true;
-                }
+            // set current state to that of the button
+            aCurrState = gamepad1.a;
+
+            if ((aCurrState == true) && (aCurrState != aPrevState)) {
+                // button is transitioning to a pressed state. So Toggle motorDirection
+                motorDirection = motorDirection * -1.0;
+
                 //Set the sweeper power to whatever the motorDirection value is
                 sweeper.setPower(motorDirection);
             }
-            else //Button a is not currently pressed so set our variable accordingly
-            {
-                buttonPressed = false;
-            }
+            // update previous state variable.
+            aPrevState = aCurrState;
 
-            if (gamepad1.x) //button 'x' will stop sweeper and reset the motor direction to initial state
+            if (gamepad1.x) //button 'x' will stop sweeper
             {
                 sweeper.setPower(0.0);
                 motorDirection = -1.0;
             }
 
-
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
+
     }
 }
