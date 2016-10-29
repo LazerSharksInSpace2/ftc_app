@@ -32,6 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode.ExampleCode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -43,12 +44,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  * It is intended to test basic function of program parameters
  *
- * You could make a copy and adjust Configuration to match you bot for use as a basic testing
+ * You could make a copy and adjust Configuration to match your bot for use as a basic testing
  * platform.
  */
 
-@TeleOp(name="TestBedOpMode", group="Linear Opmode")  // @Autonomous(...) is the other common choice
-//@Disabled
+@TeleOp(name="TestBedOpMode", group="Test")  // @Autonomous(...) is the other common choice
+@Disabled
 public class TestBed_TeleOp extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -65,7 +66,7 @@ public class TestBed_TeleOp extends LinearOpMode {
 
 
     //Create and set default servo positions variables.
-    //Possible servo values: 0.0 - 1.0  For CRServo 5=stop greater or less than will spin in that direction
+    //Possible servo values: 0.0 - 1.0  For CRServo 0.5=stop greater or less than will spin in that direction
     double CLOSED = 0.1;
     double OPEN = 1.0;
     double SpinLeft = 0.1;
