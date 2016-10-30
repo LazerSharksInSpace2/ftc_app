@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="Example: TeleOp", group="Linear Opmode")  // @Autonomous(...) is the other common choice
-@Disabled
+//@Disabled
 public class First_TeleOpLSiS extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -60,15 +60,16 @@ public class First_TeleOpLSiS extends LinearOpMode {
     //motors
     DcMotor motorLeft = null;
     DcMotor motorRight = null;
-    DcMotor motorArm = null;
+    DcMotor motorSlide = null;
 
     //servos
     Servo servoHandL = null;
     Servo servoHandR = null;
 
     //Create and set default hand positions variables. To be determined based on your build
-    double CLOSED = 0.2;
-    double OPEN = 0.8;
+    double stop = 0.5;
+    double drop = 1;
+    double pickUp = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -82,7 +83,7 @@ public class First_TeleOpLSiS extends LinearOpMode {
          */
          motorLeft  = hardwareMap.dcMotor.get("motorL");
          motorRight = hardwareMap.dcMotor.get("motorR");
-         motorArm = hardwareMap.dcMotor.get("motorArm");
+         motorSlide = hardwareMap.dcMotor.get("motorSlide");
          servoHandL = hardwareMap.servo.get("servoHandL"); //assuming a pushBot configuration of two servo grippers
          servoHandR = hardwareMap.servo.get("servoHandR");
 
@@ -90,11 +91,11 @@ public class First_TeleOpLSiS extends LinearOpMode {
         // "Reverse" the motor that runs backwards when connected directly to the battery
          motorLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
          motorRight.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-         motorArm.setDirection(DcMotor.Direction.FORWARD); // Can change based on motor configuration
+         motorSlide.setDirection(DcMotor.Direction.FORWARD); // Can change based on motor configuration
 
         //Set servo hand grippers to open position.
-         servoHandL.setPosition(OPEN);
-         servoHandR.setPosition(OPEN);
+         servoHandL.setPosition(stop);
+         servoHandR.setPosition(stop);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -114,28 +115,30 @@ public class First_TeleOpLSiS extends LinearOpMode {
             motorRight.setPower(gamepad1.right_stick_y);
 
             // Arm Control - Uses dual buttons to control motor direction
-            if(gamepad1.right_bumper)
-            {
-                motorArm.setPower(-gamepad1.right_trigger); // if both Bumper + Trigger, then negative power, runs arm down
-            }
-            else
-            {
-                motorArm.setPower(gamepad1.right_trigger);  // else trigger positive value, runs arm up
-            }
+
+                motorSlide.setPower(gamepad1.left_trigger *-1); //negative value
+
+
+                motorSlide.setPower(gamepad1.right_trigger);  // else trigger positive value, runs arm up
+            
 
             //servo commands
-            if(gamepad1.a) //button 'a' will open
+            if(gamepad2.a) //button 'a' go one direction
             {
-                servoHandR.setPosition(OPEN);
-                servoHandL.setPosition(OPEN);
-            }
-            else if (gamepad1.b) //button 'b' will close
-            {
-                servoHandR.setPosition(CLOSED);
-                servoHandL.setPosition(CLOSED);
+                servoHandR.setPosition(pickUp);
+                servoHandL.setPosition(drop);
             }
 
-
+            else if  (gamepad2.x) //button x will go opposite
+            {
+                servoHandR.setPosition(drop);
+                servoHandL.setPosition(pickUp);
+            }
+            else if (gamepad2.b) //button 'b' will stop rotation
+            {
+                servoHandR.setPosition(stop);
+                servoHandL.setPosition(stop);
+            }
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
     }
