@@ -32,6 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode.ExampleCode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -47,7 +48,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * platform.
  */
 
-@TeleOp(name="TestBedOpMode", group="Linear Opmode")  // @Autonomous(...) is the other common choice
+
+@TeleOp(name="TestBedOpMode", group="Examples")  // @Autonomous(...) is the other common choice
+
 @Disabled
 public class TestBed_TeleOp extends LinearOpMode {
 
