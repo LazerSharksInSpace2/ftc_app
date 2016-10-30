@@ -48,7 +48,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * platform.
  */
 
-@TeleOp(name="TestBedOpMode", group="Test")  // @Autonomous(...) is the other common choice
+
+@TeleOp(name="TestBedOpMode", group="Examples")  // @Autonomous(...) is the other common choice
 @Disabled
 public class TestBed_TeleOp extends LinearOpMode {
 

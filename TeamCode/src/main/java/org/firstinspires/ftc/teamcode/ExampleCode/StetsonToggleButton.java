@@ -45,7 +45,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Motor stays running until button 'x' is pressed.
  */
 
-@TeleOp(name="buttonToggle", group="Linear Opmode")  // @Autonomous(...) is the other common choice
+@TeleOp(name="buttonToggle", group="Examples")  // @Autonomous(...) is the other common choice
 @Disabled
 public class StetsonToggleButton extends LinearOpMode {
 
