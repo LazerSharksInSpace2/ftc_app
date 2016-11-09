@@ -116,10 +116,10 @@ public class First_TeleOpLSiS extends LinearOpMode {
 
             // Arm Control - Uses dual buttons to control motor direction
 
-                motorSlide.setPower(gamepad1.left_trigger *-1); //negative value
+                motorSlide.setPower(gamepad2.left_trigger *-1); //negative value
 
 
-                motorSlide.setPower(gamepad1.right_trigger);  // else trigger positive value, runs arm up
+                motorSlide.setPower(gamepad2.right_trigger);  // else trigger positive value, runs arm up
             
 
             //servo commands
