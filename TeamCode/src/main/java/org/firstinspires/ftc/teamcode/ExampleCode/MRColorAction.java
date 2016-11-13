@@ -29,17 +29,13 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.ExampleCode;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
 
-import com.qualcomm.ftcrobotcontroller.R;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /*
  *
@@ -49,43 +45,36 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
  * The op mode assumes that the color sensor
  * is configured with a name of "sensor_color".
  *
- * You can use the X button on gamepad1 to toggle the LED on and off.
+ * Example of setting action if color sensor reads target value
  *
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@TeleOp(name = "Sensor: MR Color", group = "Test")
+@TeleOp(name = "MR ColorAction", group = "Test")
 //@Disabled
-public class TestSensorMRColor extends LinearOpMode {
+public class MRColorAction extends LinearOpMode {
 
-  ColorSensor colorSensor;    // Hardware Device Object
+    // Initialize Hardware Device Objects
+  ColorSensor colorSensor;
+  Servo servoHandL;
 
+    //Create and set default servo positions variables.
+    //Possible servo values: 0.0 - 1.0  For CRServo 0.5=stop greater or less than will spin in that direction
+    double CLOSED = 0.1;
+    double OPEN = 1.0;
+    double NEUTRAL = 0.5;
 
-  @Override
-  public void runOpMode() {
+    // Declare variables
+    double blueTARGET = 20; //determine best value for reading blue sensor true
+    double redTARGET = 20;
 
-    // hsvValues is an array that will hold the hue, saturation, and value information.
-    float hsvValues[] = {0F,0F,0F};
+    @Override
+  public void runOpMode() throws InterruptedException {
 
-    // values is a reference to the hsvValues array.
-    final float values[] = hsvValues;
+    // Map devices to robot hardware
+        colorSensor = hardwareMap.colorSensor.get("sensor_color");
+        servoHandL = hardwareMap.servo.get("servoHandL");
 
-    // get a reference to the RelativeLayout so we can change the background
-    // color of the Robot Controller app to match the hue detected by the RGB sensor.
-    final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(R.id.RelativeLayout);
-
-    // bPrevState and bCurrState represent the previous and current state of the button.
-    boolean bPrevState = false;
-    boolean bCurrState = false;
-
-    // bLedOn represents the state of the LED.
-    boolean bLedOn = true;
-
-    // get a reference to our ColorSensor object.
-    colorSensor = hardwareMap.colorSensor.get("sensor_color");
-
-    // Set the LED in the beginning
-    colorSensor.enableLed(bLedOn);
 
     // wait for the start button to be pressed.
     waitForStart();
@@ -94,39 +83,22 @@ public class TestSensorMRColor extends LinearOpMode {
     // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
     while (opModeIsActive()) {
 
-      // check the status of the x button on either gamepad.
-      bCurrState = gamepad1.x;
-
-      // check for button state transitions.
-      if ((bCurrState == true) && (bCurrState != bPrevState))  {
-
-        // button is transitioning to a pressed state. So Toggle LED
-        bLedOn = !bLedOn;
-        colorSensor.enableLed(bLedOn);
-      }
-
-      // update previous state variable.
-      bPrevState = bCurrState;
-
-      // convert the RGB values to HSV values.
-      Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+      // check for blue present greater than Target value
+        if (colorSensor.blue()>blueTARGET){
+            //do this
+            servoHandL.setPosition(OPEN);
+      // check for red present greater than Target value
+        }else if (colorSensor.red()>redTARGET) {
+            //do this
+            servoHandL.setPosition(CLOSED);
+        }else { //no color sensor reads target value
+            //do this
+            servoHandL.setPosition(NEUTRAL);
+        }
 
       // send the info back to driver station using telemetry function.
-      telemetry.addData("LED", bLedOn ? "On" : "Off");
-      telemetry.addData("Clear", colorSensor.alpha());
       telemetry.addData("Red  ", colorSensor.red());
-      telemetry.addData("Green", colorSensor.green());
       telemetry.addData("Blue ", colorSensor.blue());
-      telemetry.addData("Hue", hsvValues[0]);
-
-      // change the background color to match the color detected by the RGB sensor.
-      // pass a reference to the hue, saturation, and value array as an argument
-      // to the HSVToColor method.
-      relativeLayout.post(new Runnable() {
-        public void run() {
-          relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-        }
-      });
 
       telemetry.update();
     }
