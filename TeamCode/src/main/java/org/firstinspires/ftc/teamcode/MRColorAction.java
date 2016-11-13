@@ -54,7 +54,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 //@Disabled
 public class MRColorAction extends LinearOpMode {
 
-    // Hardware Device Object
+    // Initialize Hardware Device Objects
   ColorSensor colorSensor;
   Servo servoHandL;
 
@@ -71,7 +71,7 @@ public class MRColorAction extends LinearOpMode {
     @Override
   public void runOpMode() throws InterruptedException {
 
-    // Initialize devices to robot hardware
+    // Map devices to robot hardware
         colorSensor = hardwareMap.colorSensor.get("sensor_color");
         servoHandL = hardwareMap.servo.get("servoHandL");
 
@@ -89,7 +89,7 @@ public class MRColorAction extends LinearOpMode {
             servoHandL.setPosition(OPEN);
       // check for red present greater than Target value
         }else if (colorSensor.red()>redTARGET) {
-            //do this 
+            //do this
             servoHandL.setPosition(CLOSED);
         }else { //no color sensor reads target value
             //do this
