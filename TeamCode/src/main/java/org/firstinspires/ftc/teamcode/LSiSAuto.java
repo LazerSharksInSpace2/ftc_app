@@ -32,28 +32,25 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * This file contains an minimal example of a Linear Tele "OpMode". The names of OpModes appear on the menu
- * of the FTC Driver Station. When a selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
+ * This file contains an minimal example of a Linear Autonomous "OpMode".
  *
- * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
- * It includes all the skeletal structure that all linear OpModes contain.
+ * This particular OpMode just executes a basic Autonomous driving for time, not using encoders
  *
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ * Don't forget to comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Example: TeleOp", group="Linear Opmode")  // @Autonomous(...) is the other common choice
-//@Disabled
-public class First_TeleOpLSiS extends LinearOpMode {
+@Autonomous(name="Example: Autonomous", group="Examples")  // @TeleOp(...) is the other common choice
+@Disabled
+public class LSiSAuto extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -63,13 +60,13 @@ public class First_TeleOpLSiS extends LinearOpMode {
     DcMotor motorSlide = null;
 
     //servos
+    Servo BeaconServo = null;
     Servo servoHandL = null;
     Servo servoHandR = null;
 
     //Create and set default hand positions variables. To be determined based on your build
-    double stop = 0.5;
-    double drop = 1;
-    double pickUp = 0;
+    double CLOSED = 0.2;
+    double OPEN = 0.8;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -84,62 +81,91 @@ public class First_TeleOpLSiS extends LinearOpMode {
          motorLeft  = hardwareMap.dcMotor.get("motorL");
          motorRight = hardwareMap.dcMotor.get("motorR");
          motorSlide = hardwareMap.dcMotor.get("motorSlide");
-         //servoHandL = hardwareMap.servo.get("servoHandL"); //assuming a pushBot configuration of two servo grippers
-        // servoHandR = hardwareMap.servo.get("servoHandR");
-
+         BeaconServo = hardwareMap.servo.get("BeaconServo");     //autonomous code example below uses servo for arm instead/in addition to motor
+         servoHandL = hardwareMap.servo.get("servoHandL"); //assuming a pushBot configuration of two servo grippers
+         servoHandR = hardwareMap.servo.get("servoHandR");
+        
         // eg: Set the drive motor directions:
         // "Reverse" the motor that runs backwards when connected directly to the battery
          motorLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
          motorRight.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
          motorSlide.setDirection(DcMotor.Direction.FORWARD); // Can change based on motor configuration
-
-        //Set servo hand grippers to open position.
-        // servoHandL.setPosition(stop);
-        // servoHandR.setPosition(stop);
-
+        
+        //Set servo hand grippers to open position. 
+         servoHandL.setPosition(OPEN);
+         servoHandR.setPosition(OPEN);
+        
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
         /************************
-         * TeleOp Code Below://
+         * Autonomous Code Below://
          *************************/
+        DriveForwardTime(DRIVE_POWER, 4000);
+        TurnLeft(DRIVE_POWER, 1000);
+        StopDrivingTime(2000);
 
-        while (opModeIsActive()) {  // run until the end of the match (driver presses STOP)
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
+        DriveForwardTime(DRIVE_POWER, 4000);
+        TurnRight(DRIVE_POWER, 1000);
+        StopDrivingTime(2000);
 
-            // tank drive set to gamepad1 joysticks
-            //(note: The joystick goes negative when pushed forwards)
-            motorLeft.setPower(gamepad1.left_stick_y);
-            motorRight.setPower(gamepad1.right_stick_y);
+        RaiseArm();
+        DriveForwardTime(DRIVE_POWER, 4000);
+        StopDriving();
 
-            // Arm Control - Uses dual buttons to control motor direction
+       
 
-                motorSlide.setPower(gamepad2.left_trigger *-1); //negative value
+    }//runOpMode
 
+    /** Below: Basic Drive Methods used in Autonomous code...**/
+    //set Drive Power variable
+    double DRIVE_POWER = 1.0;
 
-                motorSlide.setPower(gamepad2.right_trigger);  // else trigger positive value, runs arm up
-            
-
-            //servo commands
-            //if(gamepad2.a) //button 'a' go one direction
-            {
-              //  servoHandR.setPosition(pickUp);
-               // servoHandL.setPosition(drop);
-            }
-
-            //else if  (gamepad2.x) //button x will go opposite
-            {
-               // servoHandR.setPosition(drop);
-                //servoHandL.setPosition(pickUp);
-            }
-            //else if (gamepad2.b) //button 'b' will stop rotation
-            {
-                //servoHandR.setPosition(stop);
-                //servoHandL.setPosition(stop);
-            }
-            idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
-        }
+    public void DriveForward(double power)
+    {
+        motorLeft.setPower(power);
+        motorRight.setPower(power);
     }
-}
+
+    public void DriveForwardTime(double power, long time) throws InterruptedException
+    {
+        DriveForward(power);
+        Thread.sleep(time);
+    }
+
+    public void StopDriving()
+    {
+        DriveForward(0);
+    }
+
+    public void StopDrivingTime(long time) throws InterruptedException
+    {
+        DriveForwardTime(0, time);
+    }
+
+    public void TurnLeft(double power, long time) throws InterruptedException
+    {
+        motorLeft.setPower(-power);
+        motorRight.setPower(power);
+        Thread.sleep(time);
+    }
+
+    public void TurnRight(double power, long time) throws InterruptedException
+    {
+        TurnLeft(-power, time);
+    }
+
+    public void RaiseArm()
+    {
+        BeaconServo.setPosition(.8); //note: uses servo instead of motor.
+    }
+
+    public void LowerArm()
+    {
+        BeaconServo.setPosition(.2);
+    }
+
+
+
+}//ExampleAutonomous
