@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -80,9 +81,8 @@ public class TestAutoDriveToLine_Linear extends LinearOpMode {
     Servo servoHandL = null;
     Servo servoHandR = null;
 
-    //sensors                                                        // could also use HardwarePushbotMatrix class.
-    LightSensor             lightSensor;      // Primary LEGO Light sensor,
-    // OpticalDistanceSensor   lightSensor;   // Alternative MR ODS sensor
+    //sensors
+    OpticalDistanceSensor lightSensor;   // Alternative MR ODS sensor
 
     //variables
     static final double     WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
@@ -134,11 +134,12 @@ public class TestAutoDriveToLine_Linear extends LinearOpMode {
             idle();
         }
 
-        // Start the robot moving forward, and then begin looking for a white line.
+        // Once Start is pressed the robot begins moving forward, and then enters while loop looking for a white line threshold.
         motorLeft.setPower(APPROACH_SPEED);
         motorRight.setPower(APPROACH_SPEED);
 
         // run until the white line is seen OR the driver presses STOP;
+        // will continue to display Light Level values
         while (opModeIsActive() && (lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
 
             // Display the light level while we are looking for the line
