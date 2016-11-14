@@ -40,7 +40,6 @@ import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
@@ -48,8 +47,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * The code is structured as a LinearOpMode
  *
  * The code shows using two possible different light sensors:
- *   The Primary sensor shown in this code is a MR Optical Distance Sensor (called "sensor_ods")
- *   Alternative "commented out" code uses a legacy NXT Light sensor (called "sensor_light")
+ *   The sensor shown in this code is a MR Optical Distance Sensor (called "sensor_ods")
  *
  *   Setting the correct WHITE_THRESHOLD value is key to stopping correctly.
  *   This should be set half way between the light and dark values.
@@ -82,11 +80,11 @@ public class TestAutoDriveToLine_Linear extends LinearOpMode {
     Servo servoHandR = null;
 
     //sensors
-    OpticalDistanceSensor lightSensor;   // Alternative MR ODS sensor
+    OpticalDistanceSensor lightSensor;   //  Modern Robotics ODS sensor
 
     //variables
     static final double     WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
-    static final double     APPROACH_SPEED  = 0.5;
+    static final double     APPROACH_SPEED  = 0.5;  // adjust to desired motor speed ( 0.0 - 1.0 )
 
     @Override
     public void runOpMode() {
@@ -142,7 +140,7 @@ public class TestAutoDriveToLine_Linear extends LinearOpMode {
         // will continue to display Light Level values
         while (opModeIsActive() && (lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
 
-            // Display the light level while we are looking for the line
+            // Continue displaying the light level while we are looking for the line threshold value
             telemetry.addData("Light Level",  lightSensor.getLightDetected());
             telemetry.update();
         }
@@ -150,6 +148,8 @@ public class TestAutoDriveToLine_Linear extends LinearOpMode {
         // Stop all motors
         motorLeft.setPower(0);
         motorRight.setPower(0);
+        sleep(1000);     // pause for 1 sec to allow motors to fully stop
+
 
         /*///////////////
         // Alternatively you could add additional code here to continue on with Autonomous actions
